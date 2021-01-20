@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zzyy.study.dao.OrderDao">
+
+    <insert id="addOrder" useGeneratedKeys="true" keyProperty="id" parameterType="com.zzyy.study.entities.Order">
+        INSERT INTO t_order(orderName,orderStatus,orderToken,orderSerial)
+        VALUES (#{orderName},#{orderStatus},#{orderToken},#{orderSerial})
+    </insert>
+
+    <!-- redis use-->
+    <update id="updateOrderStatus">
+        update t_order
+        set orderStatus = #{orderStatus}
+        where orderToken = #{orderToken}
+    </update>
+
+    <update id="updateOrder">
+        update t_order
+        set orderName=#{orderName},orderStatus=#{orderStatus},orderToken=#{orderToken},orderSerial=#{orderSerial}
+        where id = #{id}
+    </update>
+
+    <select id="getOrderByToken" parameterType="String" resultType="Order">
+      select * from t_order where orderToken = #{orderToken}
+    </select>
+
+    <select id="getOrderById" parameterType="Long" resultType="Order">
+      select * from t_order where id = #{id}
+    </select>
+
+    <!-- RabbitMQ use-->
+    <update id="updateOrderStatusBySerial">
+        update t_order
+        set orderStatus = #{orderStatus}
+        where orderSerial = #{orderSerial}
+    </update>
+
+    <select id="getOrderBySerial" parameterType="String" resultType="Order">
+      select * from t_order where orderSerial = #{orderSerial}
+    </select>
+</mapper>
